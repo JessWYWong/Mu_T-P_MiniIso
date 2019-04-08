@@ -1,0 +1,53 @@
+#!/usr/bin/env python
+
+import argparse
+import sys
+
+# Parse arguments
+parser = argparse.ArgumentParser(description="Modify a branch of a tree to test 'testTrees' program by setting all values to zero.")
+parser.add_argument("filenameInput", help="Path to input ROOT file")
+parser.add_argument("filenameOutput", help="Path to modified output ROOT file")
+parser.add_argument("-b", "--branch", default="pt", help="Name of variable which is changed")
+parser.add_argument("-t", "--tree", default="fitter_tree", help="Name of the tree holding the variables")
+parser.add_argument("-d", "--directory", default="tpTree", help="Directory in the input ROOT files which contains the Tag-And-Probe tree")
+parser.add_argument("-r", "--remove", help="Remove a branch in the modified output tree")
+args = parser.parse_args()
+
+from ROOT import * # import this here, otherwise it overwrites the argparse stuff
+
+# Get files
+fileInput = TFile.Open(args.filenameInput)
+if not fileInput:
+    print('[ERROR] Input file not found: {}'.format(args.filenameInput))
+    sys.exit()
+fileOutput = TFile.Open(args.filenameOutput, "recreate")
+
+# Make output direcotry
+dirOutput = fileOutput.mkdir(args.directory)
+dirOutput.cd()
+
+# Copy input tree to output tree with given change
+dirInput = fileInput.GetDirectory(args.directory)
+if not dirInput:
+    print('[ERROR] Directory not found in input file: {}'.format(args.directory))
+    sys.exit()
+treeInput = dirInput.Get(args.tree)
+if not treeInput:
+    print('[ERROR] Tree not found in input file: {}'.format(args.tree))
+    sys.exit()
+
+treeInput.SetBranchStatus(args.branch, 0)
+if args.remove:
+    treeInput.SetBranchStatus(args.remove, 0)
+treeOutput = treeInput.CloneTree()
+
+import array
+val = array.array('d', [42.0])
+branch = treeOutput.Branch(args.branch, val, args.branch)
+for i in range(treeInput.GetEntries()):
+    # TODO This sets still all values to zero, nvm this is sufficient for testing
+    val[0] = 42
+    branch.Fill()
+
+# Write output tree to file
+dirOutput.Write()

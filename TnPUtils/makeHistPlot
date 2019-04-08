@@ -1,0 +1,145 @@
+#!/usr/bin/env python
+
+import argparse
+import sys
+import os
+import json
+
+"""
+Setup argument parser
+"""
+
+parser = argparse.ArgumentParser(description="This program takes an input JSON config and extracts plots from ROOT trees. The output consists of a plot with superimposed histograms from multiple cuts. The cuts work the same way as in the TTree method Draw. Please note taht only 1D histograms are supported.")
+parser.add_argument("inputJsonConfig", help="Path to the input JSON config file")
+parser.add_argument("-v", "--verbosity", default=1, help="Increase or decrease output verbosity")
+args = parser.parse_args()
+
+"""
+Parse JSON file
+"""
+
+with open(args.inputJsonConfig, 'r') as f:
+    data = json.loads(f.read())
+
+"""
+Go through plots defined in config JSON
+"""
+
+from ROOT import * # import this here, otherwise it overwrites the argparse stuff
+gROOT.SetBatch(True) # set ROOT to batch mode, this suppresses printing canvases
+gROOT.ProcessLine("gErrorIgnoreLevel = 1001;") # suppress stdout pollution of canvas.Print(...)
+
+for keyPlot in data:
+    if args.verbosity==1:
+        print('Processing plot config: {}'.format(keyPlot))
+        print('Config comment: {}'.format(data[keyPlot]['comment']))
+
+    # Load tree from file
+    treePath = os.path.join(data[keyPlot]['input']['directory'], data[keyPlot]['input']['tree'])
+    trees = TChain(treePath)
+    for filename in data[keyPlot]['input']['filenames']:
+        trees.AddFile(filename)
+
+    # Get histograms using Draw from TTree
+    histograms = []
+    for keyCut in data[keyPlot]['hists']:
+        variable = data[keyPlot]['hists'][keyCut]['variable']
+        cut = data[keyPlot]['hists'][keyCut]['cut']
+        rangeX = data[keyPlot]['plot']['x']
+        call = '{}>>h_{}({},{},{})'.format(variable,keyCut,rangeX[0],rangeX[1],rangeX[2]) 
+        print('Histogram \"{}\": trees.Draw(\"{}\", \"{}\")'.format(keyCut, call, cut))
+        trees.Draw(call, cut)
+        histograms.append(gROOT.FindObject('h_'+keyCut))
+
+    # Setup canvas and pad
+    gStyle.SetOptStat(0)
+    canvas = TCanvas('canvas', 'canvas', 800, 800)
+    canvas.cd()
+
+    pad = TPad('pad', 'pad', 0.02, 0.02, 1.0, 0.98)
+    pad.Draw()
+    pad.cd()
+
+    # Draw histograms
+    colorMap = data[keyPlot]['plot']['colorMap']
+    styleMap = data[keyPlot]['plot']['styleMap']
+    if args.verbosity==1:
+        print('Using colormap: {}'.format(colorMap))
+        print('Using stylemap: {}'.format(styleMap))
+    if len(histograms)>len(colorMap):
+        print('[ERROR] Colormap does not have enough entries for given histograms')
+        sys.exit()
+    if len(histograms)>len(styleMap):
+        print('[ERROR] Stylemap does not have enough entries for given histograms')
+        sys.exit()
+    for i in range(len(histograms)):
+        histograms[i].SetTitle('')
+        histograms[i].SetLineColor(colorMap[i])
+        histograms[i].SetLineStyle(styleMap[i])
+        histograms[i].SetLineWidth(data[keyPlot]['plot']['lineWidth'])
+        rangeX = data[keyPlot]['plot']['x']
+        histograms[i].GetXaxis().SetTitle(rangeX[3])
+        histograms[i].GetXaxis().SetLabelSize(22)
+        histograms[i].GetXaxis().SetTitleFont(63)
+        histograms[i].GetXaxis().SetLabelFont(43)
+        histograms[i].GetXaxis().SetTitleSize(22)
+        histograms[i].GetXaxis().SetLabelSize(20)
+        histograms[i].GetXaxis().SetTitleOffset(1.6)
+        rangeY = data[keyPlot]['plot']['y']
+        histograms[i].GetYaxis().SetTitle(rangeY[2])
+        histograms[i].GetYaxis().SetRangeUser(rangeY[0], rangeY[1])
+        histograms[i].GetYaxis().SetLabelSize(22)
+        histograms[i].GetYaxis().SetTitleFont(63)
+        histograms[i].GetYaxis().SetLabelFont(43)
+        histograms[i].GetYaxis().SetTitleSize(22)
+        histograms[i].GetYaxis().SetLabelSize(20)
+        histograms[i].GetYaxis().SetTitleOffset(1.6)
+        if i==0:
+            histograms[i].Draw('')
+        else:
+            histograms[i].Draw('same')
+
+    # Draw logo and legend
+    canvas.cd()
+    latex = TLatex()
+    latex.SetNDC()
+    latex.SetTextFont(61)
+    latex.SetTextSize(0.06)
+    latex.DrawLatex(0.16, 0.81, data[keyPlot]['plot']['logo'][0])
+    latex.SetTextFont(52)
+    latex.SetTextSize(0.04)
+    latex.SetTextAlign(11);
+    latex.DrawLatex(0.16, 0.76, data[keyPlot]['plot']['logo'][1])
+    latex.SetTextFont(42)
+    latex.SetTextSize(0.038)
+    latex.SetTextAlign(31);
+    latex.DrawLatex(0.90, 0.90, data[keyPlot]['plot']['caption'])
+    canvas.Update()
+
+    canvas.cd()
+    leg = TLegend(0.37, 0.72, 0.75, 0.86)
+    leg.SetHeader(data[keyPlot]['plot']['legendTitle'])
+    header = leg.GetListOfPrimitives().First()
+    header.SetTextColor(1)
+    header.SetTextFont(43)
+    header.SetTextSize(20)
+    for i, keyCut in enumerate(data[keyPlot]['hists']):
+        legendEntry = data[keyPlot]['hists'][keyCut]['legendEntry']
+        leg.AddEntry(histograms[i], legendEntry, 'LP')
+    leg.SetBorderSize(0)
+    leg.SetTextFont(43)
+    leg.SetTextSize(20)
+    leg.Draw()
+    canvas.Update()
+
+    # Save plot
+    outputDirectory = data[keyPlot]['output']['directory']
+    if args.verbosity==1:
+        print('Output directory: {}'.format(outputDirectory))
+    if not os.path.exists(outputDirectory):
+        os.makedirs(outputDirectory)
+    for fileType in data[keyPlot]['output']['fileType']:
+        canvas.SaveAs(os.path.join(outputDirectory,data[keyPlot]['output']['filenamePlot']+'.'+fileType))
+
+    if args.verbosity==1:
+        print('')

@@ -1,0 +1,93 @@
+{
+    "example1"   :
+    {
+        "comment"   : "Please look at example2 for a better understanding of the parameters",
+        "hists"      :
+        {
+            "no_cut"    :
+            {
+                "variable"          : "pt",
+                "cut"               : "",
+                "legendEntry"       : "no cut"
+            },
+            "eta_cut1"  :
+            {
+                "variable"          : "pt",
+                "cut"               : "abseta>1.5",
+                "legendEntry"       : "abseta>1.5"
+            },
+            "eta_cut2"  :
+            {
+                "variable"          : "pt",
+                "cut"               : "abseta>2.0",
+                "legendEntry"       : "abseta>2.0"
+            }
+        },
+        "plot"      :
+        {
+            "x"                 : [10, 0.0, 50.0, "Muon pt"],
+            "y"                 : [0, 20, "Count"],
+            "legendTitle"       : "p_{T} with cuts",
+            "caption"           : "? fb^{-1} (13 TeV, 2016)",
+            "logo"              : ["CMS", "Preliminary"],
+            "colorMap"          : [1, 4, 2, 3, 5, 6, 7, 8, 9],
+            "styleMap"          : [1, 2, 5, 4, 3, 6, 7, 8, 9],
+            "lineWidth"         : 2
+        },
+        "input"     :
+        {
+            "filenames"         : ["examples/TnPTree.root"],
+            "directory"         : "tpTree",
+            "tree"              : "fitter_tree"
+        },
+        "output"    :
+        {
+            "directory"         : "examplePlots/hist_1",
+            "filenamePlot"      : "plot",
+            "fileType"          : ["png", "pdf"]
+        }
+    },
+
+    "example2"   :
+    {
+        "comment"   : "Here goes example2",
+        "hists"      :
+        {
+            "no_cut"    :
+            {
+                "variable"          : "pt",
+                "cut"               : "",
+                "legendEntry"       : "Legend 1"
+            },
+            "eta_cut1"  :
+            {
+                "variable"          : "pt",
+                "cut"               : "abseta>1.5",
+                "legendEntry"       : "Legend 2"
+            }
+        },
+        "plot"      :
+        {
+            "x"                 : [10, 0.0, 50.0, "Label X"],
+            "y"                 : [0, 20, "Label Y"],
+            "legendTitle"       : "Legend title",
+            "caption"           : "Caption in upper right corner",
+            "logo"              : ["Logo", "Logo text"],
+            "colorMap"          : [2, 3, 1, 4, 5, 6, 7, 8, 9],
+            "styleMap"          : [6, 9, 5, 4, 3, 6, 7, 1, 2],
+            "lineWidth"         : 2
+        },
+        "input"     :
+        {
+            "filenames"         : ["examples/TnPTree.root"],
+            "directory"         : "tpTree",
+            "tree"              : "fitter_tree"
+        },
+        "output"    :
+        {
+            "directory"         : "examplePlots/hist_2",
+            "filenamePlot"      : "plot",
+            "fileType"          : ["png", "pdf"]
+        }
+    }
+}

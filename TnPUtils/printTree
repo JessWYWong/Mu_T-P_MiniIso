@@ -1,0 +1,68 @@
+#!/usr/bin/env python
+
+import argparse
+import sys
+
+"""
+Setup argument parser
+"""
+
+parser = argparse.ArgumentParser(description="The program takes the input ROOT file and applies the specified cut. Then, it prints run, luminosity and event in the format 'run:lumi:event'. This is mainly used to feed the output to CMS analysis tools.")
+parser.add_argument("filenameInput", help="Path to the input Tag-And-Probe ROOT file")
+parser.add_argument("-d", "--directory", default="tpTree", help="Directory in the input ROOT file which contains the Tag-And-Probe tree")
+parser.add_argument("-t", "--tree", default="fitter_tree", help="Name of the tree holding the variables")
+parser.add_argument("-c", "--cut", default="", help="Cut string which is used on input tree (applied as CopyTree() argument)")
+parser.add_argument("-v", "--verbosity", default=0, action="count", help="Increase or decrease output verbosity for input/output tree properties")
+args = parser.parse_args()
+
+"""
+Applying cut within the CopyTree ROOT function
+"""
+
+from ROOT import * # import this here, otherwise it overwrites the argparse stuff
+
+# Get input tree
+fileInput = TFile.Open(args.filenameInput)
+if not fileInput:
+    print('[ERROR] Input file not found: {}'.format(args.filenameInput))
+    sys.exit()
+dirInput = fileInput.GetDirectory(args.directory)
+if not dirInput:
+    print('[ERROR] Directory not found in input file: {}'.format(args.directory))
+    sys.exit()
+treeInput = dirInput.Get(args.tree)
+if not treeInput:
+    print('[ERROR] Tree not found in input file: {}'.format(args.tree))
+    sys.exit()
+
+# Copy input tree and apply cut
+treeOutput = treeInput.CopyTree(args.cut)
+
+# Go through events and print run:lumi:event for each
+branchRun = treeOutput.GetBranch('run')
+if not branchRun:
+    print('[ERROR] Branch \'run\' not found')
+    sys.exit()
+branchLumi = treeOutput.GetBranch('lumi')
+if not branchLumi:
+    print('[ERROR] Branch \'lumi\' not found')
+    sys.exit()
+branchEvent = treeOutput.GetBranch('event')
+if not branchEvent:
+    print('[ERROR] Branch \'event\' not found')
+    sys.exit()
+leafRun = branchRun.GetLeaf('run')
+leafLumi = branchLumi.GetLeaf('lumi')
+leafEvent = branchEvent.GetLeaf('event')
+for iEvent in range(treeOutput.GetEntries()):
+    branchRun.GetEntry(iEvent)
+    branchLumi.GetEntry(iEvent)
+    branchEvent.GetEntry(iEvent)
+    print('{}:{}:{}'.format(int(leafRun.GetValue()), int(leafLumi.GetValue()), int(leafEvent.GetValue())))
+
+# Print some info if verbosity is increased
+if args.verbosity:
+    print('Number of entries in tree:')
+    print('--------------------------')
+    print('Before cut: {}'.format(treeInput.GetEntries()))
+    print('After cut:  {}'.format(treeOutput.GetEntries()))
