@@ -1,9 +1,0 @@
-<use name="tensorflow-cc" />
-
-<use name="FWCore/Framework" />
-<use name="FWCore/Utilities" />
-<use name="FWCore/Concurrency" />
-
-<export>
-    <lib name="1" />
-</export>
