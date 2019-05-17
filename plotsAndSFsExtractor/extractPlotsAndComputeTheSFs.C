@@ -205,11 +205,11 @@ void extractPlotsAndComputeTheSFs(TString theIDname, TString dataFile, TString m
                                 the1DAssymGraph->GetPoint(xaxisBin,x,y);
                                 lowError = the1DAssymGraph->GetErrorYlow(xaxisBin);
                                 highError = the1DAssymGraph->GetErrorYhigh(xaxisBin);
-                                histo2D->SetBinContent(xaxisBin+1,  oneDhistos+1, y);
-                                if (lowError>highError) histo2D->SetBinError(xaxisBin+1,  oneDhistos+1, lowError);
-                                else histo2D->SetBinError(xaxisBin+1,  oneDhistos+1, highError);
+                                histo2D->SetBinContent(histo2D->GetXaxis()->FindBin(x),  oneDhistos+1, y);
+                                if (lowError>highError) histo2D->SetBinError(histo2D->GetXaxis()->FindBin(x),  oneDhistos+1, lowError);
+                                else histo2D->SetBinError(histo2D->GetXaxis()->FindBin(x),  oneDhistos+1, highError);
                                 float foundPathoError = findPathologocialErrors(name1D, y, highError, lowError);
-                                if (foundPathoError>1) histo2D->SetBinError(xaxisBin+1,  oneDhistos+1, foundPathoError);
+                                if (foundPathoError>1) histo2D->SetBinError(histo2D->GetXaxis()->FindBin(x),  oneDhistos+1, foundPathoError);
                             }
                             nextKey1Dmc =(TKey*)binsEffienciesMC();
                             TString name1Dmc = nextKey1Dmc->GetName();
@@ -230,11 +230,11 @@ void extractPlotsAndComputeTheSFs(TString theIDname, TString dataFile, TString m
                                 the1DAssymGraphMC->GetPoint(xaxisBin,x,y);
                                 lowError = the1DAssymGraphMC->GetErrorYlow(xaxisBin);
                                 highError = the1DAssymGraphMC->GetErrorYhigh(xaxisBin);
-                                histo2DMC->SetBinContent(xaxisBin+1,  oneDhistos+1, y);
-                                if (lowError>highError) histo2DMC->SetBinError(xaxisBin+1,  oneDhistos+1, lowError);
-                                else histo2DMC->SetBinError(xaxisBin+1,  oneDhistos+1, highError);
+                                histo2DMC->SetBinContent(histo2D->GetXaxis()->FindBin(x),  oneDhistos+1, y);
+                                if (lowError>highError) histo2DMC->SetBinError(histo2D->GetXaxis()->FindBin(x),  oneDhistos+1, lowError);
+                                else histo2DMC->SetBinError(histo2D->GetXaxis()->FindBin(x),  oneDhistos+1, highError);
                                 float foundPathoError = findPathologocialErrors(name1D, y, highError, lowError);
-                                if (foundPathoError>1) histo2DMC->SetBinError(xaxisBin+1,  oneDhistos+1, foundPathoError);
+                                if (foundPathoError>1) histo2DMC->SetBinError(histo2D->GetXaxis()->FindBin(x),  oneDhistos+1, foundPathoError);
                             }
                         }
                         theMainDirectory->cd();
