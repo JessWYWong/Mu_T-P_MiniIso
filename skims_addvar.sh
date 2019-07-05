@@ -1,0 +1,13 @@
+nohup TnPUtils/skimTree /eos/user/w/wiwong/TagAndProbe/addVar_out/fullB_iso.root /eos/user/w/wiwong/TagAndProbe/IsoB_Tight.root -r "all" -k "pt abseta eta mass run CutBasedIdTight miniIsoTight" </dev/null > IsoB_Tight.log 2>&1 &
+nohup TnPUtils/skimTree /eos/user/w/wiwong/TagAndProbe/addVar_out/fullC_iso.root /eos/user/w/wiwong/TagAndProbe/IsoC_Tight.root -r "all" -k "pt abseta eta mass run CutBasedIdTight miniIsoTight" </dev/null > IsoC_Tight.log 2>&1 &
+nohup TnPUtils/skimTree /eos/user/w/wiwong/TagAndProbe/addVar_out/fullD_iso.root /eos/user/w/wiwong/TagAndProbe/IsoD_Tight.root -r "all" -k "pt abseta eta mass run CutBasedIdTight miniIsoTight" </dev/null > IsoD_Tight.log 2>&1 &
+nohup TnPUtils/skimTree /eos/user/w/wiwong/TagAndProbe/addVar_out/fullE_iso.root /eos/user/w/wiwong/TagAndProbe/IsoE_Tight.root -r "all" -k "pt abseta eta mass run CutBasedIdTight miniIsoTight" </dev/null > IsoE_Tight.log 2>&1 &
+nohup TnPUtils/skimTree /eos/user/w/wiwong/TagAndProbe/addVar_out/fullF_iso.root /eos/user/w/wiwong/TagAndProbe/IsoF_Tight.root -r "all" -k "pt abseta eta mass run CutBasedIdTight miniIsoTight" </dev/null > IsoF_Tight.log 2>&1 &
+nohup TnPUtils/skimTree /eos/user/w/wiwong/TagAndProbe/addVar_out/fullDY_iso.root /eos/user/w/wiwong/TagAndProbe/IsoDY_Tight.root -r "all" -k "pt abseta eta mass run CutBasedIdTight miniIsoTight" </dev/null > IsoDY_Tight.log 2>&1 &
+
+nohup TnPUtils/skimTree /eos/user/w/wiwong/TagAndProbe/addVar_out/fullB_iso.root /eos/user/w/wiwong/TagAndProbe/IsoB_Loose.root -r "all" -k "pt abseta eta mass run CutBasedIdLoose miniIsoLoose" </dev/null > IsoB_Loose.log 2>&1 &
+nohup TnPUtils/skimTree /eos/user/w/wiwong/TagAndProbe/addVar_out/fullC_iso.root /eos/user/w/wiwong/TagAndProbe/IsoC_Loose.root -r "all" -k "pt abseta eta mass run CutBasedIdLoose miniIsoLoose" </dev/null > IsoC_Loose.log 2>&1 &
+nohup TnPUtils/skimTree /eos/user/w/wiwong/TagAndProbe/addVar_out/fullD_iso.root /eos/user/w/wiwong/TagAndProbe/IsoD_Loose.root -r "all" -k "pt abseta eta mass run CutBasedIdLoose miniIsoLoose" </dev/null > IsoD_Loose.log 2>&1 &
+nohup TnPUtils/skimTree /eos/user/w/wiwong/TagAndProbe/addVar_out/fullE_iso.root /eos/user/w/wiwong/TagAndProbe/IsoE_Loose.root -r "all" -k "pt abseta eta mass run CutBasedIdLoose miniIsoLoose" </dev/null > IsoE_Loose.log 2>&1 &
+nohup TnPUtils/skimTree /eos/user/w/wiwong/TagAndProbe/addVar_out/fullF_iso.root /eos/user/w/wiwong/TagAndProbe/IsoF_Loose.root -r "all" -k "pt abseta eta mass run CutBasedIdLoose miniIsoLoose" </dev/null > IsoF_Loose.log 2>&1 &
+nohup TnPUtils/skimTree /eos/user/w/wiwong/TagAndProbe/addVar_out/fullDY_iso.root /eos/user/w/wiwong/TagAndProbe/IsoDY_Loose.root -r "all" -k "pt abseta eta mass run CutBasedIdLoose miniIsoLoose" </dev/null > IsoDY_Loose.log 2>&1 &

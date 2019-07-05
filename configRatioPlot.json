@@ -1,0 +1,71 @@
+{
+    "example1"   :
+    {
+        "comment"   : "Look at example2 to understand the config parameters.",
+        "input1"    :
+        {
+            "label"             : "Data",
+            "filename"          : "examples/TnPData.root",
+            "directory"         : "tpTree/MuonEfficiency/",
+            "binnedVariable"    : "abseta"
+        },
+        "input2"    :
+        {
+            "label"             : "MC",
+            "filename"          : "examples/TnPMC.root",
+            "directory"         : "tpTree/MuonEfficiency/",
+            "binnedVariable"    : "abseta"
+        },
+        "plot"      :
+        {
+            "x"                 : [0.0, 2.4, "Muon abseta"],
+            "yAbsolute"         : [0.55, 1.35, "Efficiency"],
+            "yRatio"            : [0.65, 1.35, "Data/MC"],
+            "legend"            : ["Mu50 HLT, p_{T} > 55 GeV", "Data", "MC"],
+            "caption"           : "7.6 fb^{-1} (13 TeV, 2016)",
+            "logo"              : ["CMS", "Preliminary"],
+            "colorMap"          : [1, 4, 1]
+        },
+        "output"    :
+        {
+            "directory"         : "examplePlots/ratio_1",
+            "filenameRatio"     : "ratio",
+            "fileType"          : ["png", "pdf"]
+        }
+    },
+
+    "example2"   :
+    {
+        "comment"   : "This is an copy of the first example with more understandable config parameters.",
+        "input1"    :
+        {
+            "label"             : "Label input 1",
+            "filename"          : "examples/TnPData.root",
+            "directory"         : "tpTree/MuonEfficiency/",
+            "binnedVariable"    : "abseta"
+        },
+        "input2"    :
+        {
+            "label"             : "Label input 2",
+            "filename"          : "examples/TnPMC.root",
+            "directory"         : "tpTree/MuonEfficiency/",
+            "binnedVariable"    : "abseta"
+        },
+        "plot"      :
+        {
+            "x"                 : [1.0, 2.0, "Label X"],
+            "yAbsolute"         : [0.55, 1.35, "Lable Y upper"],
+            "yRatio"            : [0.65, 1.35, "Label Y lower"],
+            "legend"            : ["Legend title", "Legend input 1", "Legend input 2"],
+            "caption"           : "Caption text in upper right corner",
+            "logo"              : ["Logo text", "Logo additional text"],
+            "colorMap"          : [1, 4, 1]
+        },
+        "output"    :
+        {
+            "directory"         : "examplePlots/ratio_2",
+            "filenameRatio"     : "ratio",
+            "fileType"          : ["pdf", "png"]
+        }
+    }
+}
